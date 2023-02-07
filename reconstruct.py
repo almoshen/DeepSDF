@@ -181,9 +181,9 @@ if __name__ == "__main__":
     with open(args.split_filename, "r") as f:
         split = json.load(f)
 
-    npz_filenames = deep_sdf.data.get_instance_filenames(args.data_source, split)
+    foldernames = deep_sdf.data.get_filenames(args.data_source, split)
 
-    random.shuffle(npz_filenames)
+    random.shuffle(foldernames)
 
     logging.debug(decoder)
 
@@ -211,30 +211,34 @@ if __name__ == "__main__":
     if not os.path.isdir(reconstruction_codes_dir):
         os.makedirs(reconstruction_codes_dir)
 
-    for ii, npz in enumerate(npz_filenames):
+    for ii, folder in enumerate(foldernames):
 
-        if "npz" not in npz:
+        if not os.path.isdir(folder):
             continue
 
-        full_filename = os.path.join(args.data_source, ws.sdf_samples_subdir, npz)
+        if not os.listdir(folder):
+            continue
 
-        logging.debug("loading {}".format(npz))
 
-        data_sdf = deep_sdf.data.read_sdf_samples_into_ram(full_filename)
+        full_filename = os.path.join(args.data_source, ws.sdf_samples_subdir, folder)
+
+        logging.debug("loading {}".format(folder))
+
+        data_sdf = deep_sdf.data.read_sdfs_into_ram(full_filename)
 
         for k in range(repeat):
 
             if rerun > 1:
                 mesh_filename = os.path.join(
-                    reconstruction_meshes_dir, npz[:-4] + "-" + str(k + rerun)
+                    reconstruction_meshes_dir, folder + "-" + str(k + rerun)
                 )
                 latent_filename = os.path.join(
-                    reconstruction_codes_dir, npz[:-4] + "-" + str(k + rerun) + ".pth"
+                    reconstruction_codes_dir, folder + "-" + str(k + rerun) + ".pth"
                 )
             else:
-                mesh_filename = os.path.join(reconstruction_meshes_dir, npz[:-4])
+                mesh_filename = os.path.join(reconstruction_meshes_dir, folder)
                 latent_filename = os.path.join(
-                    reconstruction_codes_dir, npz[:-4] + ".pth"
+                    reconstruction_codes_dir, folder + ".pth"
                 )
 
             if (
@@ -244,7 +248,7 @@ if __name__ == "__main__":
             ):
                 continue
 
-            logging.info("reconstructing {}".format(npz))
+            logging.info("reconstructing {}".format(folder))
 
             data_sdf[0] = data_sdf[0][torch.randperm(data_sdf[0].shape[0])]
             data_sdf[1] = data_sdf[1][torch.randperm(data_sdf[1].shape[0])]
