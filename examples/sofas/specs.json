@@ -1,6 +1,5 @@
 {
-  "Description" : [ "This experiment learns a shape representation for sofas ",
-                    "using data from ShapeNet version 2." ],
+  "Description" :"This experiment learns a shape representation for sofas using data from ShapeNet version 2.",
   "DataSource" : "data",
   "TrainSplit" : "examples/splits/sv2_sofas_train.json",
   "TestSplit" : "examples/splits/sv2_sofas_test.json",
