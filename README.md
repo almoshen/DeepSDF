@@ -74,7 +74,8 @@ The only file that is required to begin an experiment is 'specs.json', which set
 
 ## How to Use DeepSDF
 
-### Pre-processing the Data
+### Pre-processing the Data （Original method)
+Data stored in google drive (Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2)
 
 In order to use mesh data for training a DeepSDF model, the mesh will need to be pre-processed. This can be done with the `preprocess_data.py` executable. The preprocessing code is in C++ and has the following requirements:
 
@@ -88,6 +89,17 @@ In order to use mesh data for training a DeepSDF model, the mesh will need to be
 [3]: https://github.com/jlblancoc/nanoflann
 [4]: https://eigen.tuxfamily.org
 
+Easiest way to use CLI11, Pangolin and nanoflann: clone the repo and use cmake:
+
+```
+mkdir build && cd build
+cmake ..
+cmake --build .
+
+sudo make install
+```
+For Eigen3: sudo apt install libeigen3-dev
+
 With these dependencies, the build process follows the standard CMake procedure:
 
 ```
@@ -99,13 +111,23 @@ make -j
 
 Once this is done there should be two executables in the `DeepSDF/bin` directory, one for surface sampling and one for SDF sampling. With the binaries, the dataset can be preprocessed using `preprocess_data.py`.
 
-#### Preprocessing with Headless Rendering 
+
+#### Preprocessing with Headless Rendering (Original method)
 
 The preprocessing script requires an OpenGL context, and to acquire one it will open a (small) window for each shape using Pangolin. If Pangolin has been compiled with EGL support, you can use the "headless" rendering mode to avoid the windows stealing focus. Pangolin's headless mode can be enabled by setting the `PANGOLIN_WINDOW_URI` environment variable as follows:
 
 ```
 export PANGOLIN_WINDOW_URI=headless://
 ```
+
+### Pre-processing the Data （New method)
+Run ShapeNetData.ipynb
+If using wsl, install google drive and change source_dir = '/mnt/g/Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2'
+This method utilizes the package
+
+- [mesh_to_sdf][5]
+
+[5]: https://github.com/marian42/mesh_to_sdf
 
 ### Training a Model
 
@@ -114,6 +136,14 @@ Once data has been preprocessed, models can be trained using:
 ```
 python train_deep_sdf.py -e <experiment_directory>
 ```
+
+Models can also be trained using:
+
+```
+colab_train_deep_sdf.ipynb
+```
+Check the main_function() and change parameters for different training
+Change datasource = "/mnt/g/Shared drives/Github/DeepSDF/data" for wsl
 
 Parameters of training are stored in a "specification file" in the experiment directory, which (1) avoids proliferation of command line arguments and (2) allows for easy reproducibility. This specification file includes a reference to the data directory and a split file specifying which subset of the data to use for training.
 
@@ -138,6 +168,7 @@ To use a trained model to reconstruct explicit mesh representations of shapes fr
 ```
 python reconstruct.py -e <experiment_directory>
 ```
+For colab, run colab_reconstruct.ipynb
 
 This will use the latest model parameters to reconstruct all the meshes in the split. To specify a particular checkpoint to use for reconstruction, use the ```--checkpoint``` flag followed by the epoch number. Generally, test SDF sampling strategy and regularization could affect the quality of the test reconstructions. For example, sampling aggressively near the surface could provide accurate surface details but might leave under-sampled space unconstrained, and using high L2 regularization coefficient could result in perceptually better but quantitatively worse test reconstructions.
 
