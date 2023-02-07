@@ -32,6 +32,28 @@ def get_instance_filenames(data_source, split):
                 npzfiles += [instance_filename]
     return npzfiles
 
+def get_filenames(data_source, split):
+    folders = []
+    print(data_source)
+    for dataset in split:
+        for class_name in split[dataset]:
+            for instance_name in split[dataset][class_name]:
+                instance_filename = os.path.join(
+                    dataset, class_name, instance_name
+                )
+                folder_path = os.path.join(data_source, ws.sdf_samples_subdir, instance_filename)
+                if os.path.isdir(folder_path):
+                    if not os.listdir(folder_path):
+                        continue
+                        # print(folder_path + ' is empty')
+                    else:
+                        folders += [instance_filename]
+                else:
+                    continue
+                    # print(folder_path + ' does not exist')
+                
+    return folders
+
 
 class NoMeshFileError(RuntimeError):
     """Raised when a mesh file is not found in a shape directory"""
@@ -68,6 +90,20 @@ def read_sdf_samples_into_ram(filename):
 
     return [pos_tensor, neg_tensor]
 
+def read_sdfs_into_ram(filename):
+    sdfname = os.path.join(filename, 'sdf.npy')
+    pointsname = os.path.join(filename, 'points.npy')
+    sdf = np.load(sdfname).reshape(-1,1)
+    points = np.load(pointsname)
+    data = np.hstack((points,sdf))
+
+    neg = data[data[:,3] < 0]
+    pos = data[data[:,3] > 0]
+    pos_tensor = torch.from_numpy(pos)
+    neg_tensor = torch.from_numpy(neg)
+
+    return [pos_tensor, neg_tensor]
+
 
 def unpack_sdf_samples(filename, subsample=None):
     npz = np.load(filename)
@@ -89,6 +125,32 @@ def unpack_sdf_samples(filename, subsample=None):
 
     return samples
 
+def sdf_subsamples(filename, subsample=None):
+    sdfname = os.path.join(filename, 'sdf.npy')
+    pointsname = os.path.join(filename, 'points.npy')
+    sdf = np.load(sdfname).reshape(-1,1)
+    points = np.load(pointsname)
+    data = np.hstack((points,sdf))
+    if subsample is None:
+        return data
+
+    neg = data[data[:,3] < 0]
+    pos = data[data[:,3] > 0]
+    pos_tensor = torch.from_numpy(pos)
+    neg_tensor = torch.from_numpy(neg)
+
+    # split the sample into half
+    half = int(subsample / 2)
+
+    random_pos = (torch.rand(half) * pos_tensor.shape[0]).long()
+    random_neg = (torch.rand(half) * neg_tensor.shape[0]).long()
+
+    sample_pos = torch.index_select(pos_tensor, 0, random_pos)
+    sample_neg = torch.index_select(neg_tensor, 0, random_neg)
+
+    samples = torch.cat([sample_pos, sample_neg], 0)
+
+    return samples
 
 def unpack_sdf_samples_from_ram(data, subsample=None):
     if subsample is None:
@@ -128,8 +190,8 @@ class SDFSamples(torch.utils.data.Dataset):
         num_files=1000000,
     ):
         self.subsample = subsample
-
-        self.data_source = data_source
+        #split: sv2_chairs_train.json
+        self.data_source = data_source #data folder
         self.npyfiles = get_instance_filenames(data_source, split)
 
         logging.debug(
@@ -169,3 +231,35 @@ class SDFSamples(torch.utils.data.Dataset):
             )
         else:
             return unpack_sdf_samples(filename, self.subsample), idx
+
+class MSDFSamples(torch.utils.data.Dataset):
+    def __init__(
+        self,
+        data_source,
+        split,
+        subsample,
+        print_filename=False,
+        num_files=1000000,
+    ):
+        self.subsample = subsample
+        #split: sv2_chairs_train.json
+        self.data_source = data_source #data folder
+        self.folders = get_filenames(data_source, split)
+
+        logging.debug(
+            "using "
+            + str(len(self.folders))
+            + " shapes from data source "
+            + data_source
+        )
+
+
+    def __len__(self):
+        return len(self.folders)
+
+    def __getitem__(self, idx):
+        filename = os.path.join(
+            self.data_source, ws.sdf_samples_subdir, self.folders[idx]
+        )
+
+        return sdf_subsamples(filename, self.subsample), idx
