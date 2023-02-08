@@ -34,13 +34,14 @@ def get_instance_filenames(data_source, split):
 
 def get_filenames(data_source, split):
     folders = []
-    print(data_source)
     for dataset in split:
+
         for class_name in split[dataset]:
             for instance_name in split[dataset][class_name]:
                 instance_filename = os.path.join(
                     dataset, class_name, instance_name
                 )
+                
                 folder_path = os.path.join(data_source, ws.sdf_samples_subdir, instance_filename)
                 if os.path.isdir(folder_path):
                     if not os.listdir(folder_path):
@@ -50,8 +51,7 @@ def get_filenames(data_source, split):
                         folders += [instance_filename]
                 else:
                     continue
-                    # print(folder_path + ' does not exist')
-                
+                    # print(folder_path + ' does not exist')          
     return folders
 
 
