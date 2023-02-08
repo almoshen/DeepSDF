@@ -2,22 +2,6 @@
 
 This is an implementation of the CVPR '19 paper "DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation" by Park et al. See the paper [here][6]. 
 
-[![DeepSDF Video](https://img.youtube.com/vi/LILRJzMQw5o/0.jpg)](https://www.youtube.com/watch?v=LILRJzMQw5o)
-
-## Citing DeepSDF
-
-If you use DeepSDF in your research, please cite the
-[paper](http://openaccess.thecvf.com/content_CVPR_2019/html/Park_DeepSDF_Learning_Continuous_Signed_Distance_Functions_for_Shape_Representation_CVPR_2019_paper.html):
-```
-@InProceedings{Park_2019_CVPR,
-author = {Park, Jeong Joon and Florence, Peter and Straub, Julian and Newcombe, Richard and Lovegrove, Steven},
-title = {DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation},
-booktitle = {The IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-month = {June},
-year = {2019}
-}
-```
-
 ## File Organization
 
 The various Python scripts assume a shared organizational structure such that the output from one script can easily be used as input to another. This is true for both preprocessed data as well as experiments which make use of the datasets.
@@ -25,19 +9,6 @@ The various Python scripts assume a shared organizational structure such that th
 ##### Data Layout
 
 The DeepSDF code allows for pre-processing of meshes from multiple datasets and stores them in a unified data source. It also allows for separation of meshes according to class at the dataset level. The structure is as follows:
-
-```
-<data_source_name>/
-    .datasources.json
-    SdfSamples/
-        <dataset_name>/
-            <class_name>/
-                <instance_name>.npz
-    SurfaceSamples/
-        <dataset_name>/
-            <class_name>/
-                <instance_name>.ply
-```
 
 Subsets of the unified data source can be reference using split files, which are stored in a simple JSON format. For examples, see `examples/splits/`. 
 
@@ -144,8 +115,8 @@ Models can also be trained using:
 ```
 colab_train_deep_sdf.ipynb
 ```
-Check the main_function() and change parameters for different training
-Change datasource = "/mnt/g/Shared drives/Github/DeepSDF/data" for wsl
+Check the main_function() and change parameters for different training <br>
+Change datasource in specs.json to google drive data folder like "/mnt/g/Shared drives/Github/DeepSDF/data" for wsl
 
 Parameters of training are stored in a "specification file" in the experiment directory, which (1) avoids proliferation of command line arguments and (2) allows for easy reproducibility. This specification file includes a reference to the data directory and a split file specifying which subset of the data to use for training.
 
@@ -176,11 +147,6 @@ Or colab_reconstruct.ipynb
 
 This will use the latest model parameters to reconstruct all the meshes in the split. To specify a particular checkpoint to use for reconstruction, use the ```--checkpoint``` flag followed by the epoch number. Generally, test SDF sampling strategy and regularization could affect the quality of the test reconstructions. For example, sampling aggressively near the surface could provide accurate surface details but might leave under-sampled space unconstrained, and using high L2 regularization coefficient could result in perceptually better but quantitatively worse test reconstructions.
 
-##### Note on Table 3 from the CVPR '19 Paper
-
-Given the stochastic nature of shape reconstruction (shapes are reconstructed via gradient descent with a random initialization), reconstruction accuracy will vary across multiple reruns of the same shape. The metrics listed in Table 3 for the "chair" and "plane" are the result of performing two reconstructions of each shape and keeping the one with the lowest chamfer distance. The code as released does not support this evaluation and thus the reproduced results will likely differ from those produced in the paper. For example, our test run with the provided code produced Chamfer distance (multiplied by 10<sup>3</sup>) mean and median of 0.157 and 0.062 respectively for the "chair" class and 0.101 and 0.044 for the "plane" class (compared to 0.204, 0.072 for chairs and 0.143, 0.036 for planes reported in the paper). 
-
-
 ## Examples
 
 Here's a list of commands for a typical use case of training and evaluating a DeepSDF model using the "sofa" class of the ShapeNet version 2 dataset. 
@@ -207,8 +173,6 @@ python preprocess_data.py --data_dir data --source [...]/ShapeNetCore.v2/ --name
 # reconstruct meshes from the sofa test split (after 2000 epochs)
 python reconstruct.py -e examples/sofas -c 2000 --split examples/splits/sv2_sofas_test.json -d data --skip
 
-# evaluate the reconstructions
-python evaluate.py -e examples/sofas -c 2000 -d data -s examples/splits/sv2_sofas_test.json 
 ```
 
 ## License
