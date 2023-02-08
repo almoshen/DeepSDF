@@ -121,13 +121,15 @@ export PANGOLIN_WINDOW_URI=headless://
 ```
 
 ### Pre-processing the Data （New method)
-Run ShapeNetData.ipynb
-If using wsl, install google drive and change source_dir = '/mnt/g/Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2'
+Run ShapeNetData.ipynb<br>
+If using wsl, install google drive and change source_dir = '/mnt/g/Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2'<br>
 This method utilizes the package
 
 - [mesh_to_sdf][5]
 
 [5]: https://github.com/marian42/mesh_to_sdf
+
+
 
 ### Training a Model
 
@@ -154,8 +156,10 @@ All intermediate results from training are stored in the experiment directory. T
 ```
 python plot_log.py -e <experiment_directory>
 ```
+Or colab_plot_log.ipynb <br>
 
-By default, this will plot the loss but other values can be shown using the `--type` flag.
+By default, this will plot the loss but other values can be shown using the `--type` flag.<br>
+"epoch", "loss", "learning_rate", "timing", "latent_magnitude", "param_magnitude"
 
 ##### Continuing from a Saved Optimization State
 
@@ -168,21 +172,9 @@ To use a trained model to reconstruct explicit mesh representations of shapes fr
 ```
 python reconstruct.py -e <experiment_directory>
 ```
-For colab, run colab_reconstruct.ipynb
+Or colab_reconstruct.ipynb
 
 This will use the latest model parameters to reconstruct all the meshes in the split. To specify a particular checkpoint to use for reconstruction, use the ```--checkpoint``` flag followed by the epoch number. Generally, test SDF sampling strategy and regularization could affect the quality of the test reconstructions. For example, sampling aggressively near the surface could provide accurate surface details but might leave under-sampled space unconstrained, and using high L2 regularization coefficient could result in perceptually better but quantitatively worse test reconstructions.
-
-### Shape Completion
-
-The current release does not include code for shape completion. Please check back later!
-
-### Evaluating Reconstructions
-
-Before evaluating a DeepSDF model, a second mesh preprocessing step is required to produce a set of points sampled from the surface of the test meshes. This can be done as with the sdf samples, but passing the `--surface` flag to the pre-processing script. Once this is done, evaluations are done using:
-
-```
-python evaluate.py -e <experiment_directory> -d <data_directory> --split <split_filename>
-```
 
 ##### Note on Table 3 from the CVPR '19 Paper
 
@@ -219,17 +211,9 @@ python reconstruct.py -e examples/sofas -c 2000 --split examples/splits/sv2_sofa
 python evaluate.py -e examples/sofas -c 2000 -d data -s examples/splits/sv2_sofas_test.json 
 ```
 
-## Team
-
-Jeong Joon Park, Peter Florence, Julian Straub, Richard Newcombe, Steven Lovegrove
-
-## Acknowledgements
-
-We want to acknowledge the help of Tanner Schmidt with releasing the code.
-
 ## License
 
-DeepSDF is relased under the MIT License. See the [LICENSE file][5] for more details.
+DeepSDF is relased under the MIT License. See the [LICENSE file][6] for more details.
 
-[5]: https://github.com/facebookresearch/DeepSDF/blob/master/LICENSE
-[6]: http://openaccess.thecvf.com/content_CVPR_2019/html/Park_DeepSDF_Learning_Continuous_Signed_Distance_Functions_for_Shape_Representation_CVPR_2019_paper.html
+[6]: https://github.com/facebookresearch/DeepSDF/blob/master/LICENSE
+[7]: http://openaccess.thecvf.com/content_CVPR_2019/html/Park_DeepSDF_Learning_Continuous_Signed_Distance_Functions_for_Shape_Representation_CVPR_2019_paper.html
