@@ -1,6 +1,6 @@
 # DeepSDF
 
-This is an implementation of the CVPR '19 paper "DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation" by Park et al. See the paper [here][6]. 
+This is an implementation of the CVPR '19 paper "DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation" by Park et al. See the paper [here][7]. 
 
 ## File Organization
 
@@ -45,9 +45,16 @@ The only file that is required to begin an experiment is 'specs.json', which set
 
 ## How to Use DeepSDF
 
-### Pre-processing the Data （Original method)
-Data stored in google drive (Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2)
+### Attention!
 
+If you train the model using colab, please upload zip file to colab and unzip there. Reading files from google drives slow down your training process. The A100 is as slow as my 3080ti when I read data from google drives.<br>
+Every python script has a corresponding Jupyternotebook.<br>
+Change the 'datasource' in exmples/categories/xx.json file <br>
+
+Original Data stored in google drive (Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2)
+
+### Pre-processing the Data （Original method)
+Not The Preferred Method<br>
 In order to use mesh data for training a DeepSDF model, the mesh will need to be pre-processed. This can be done with the `preprocess_data.py` executable. The preprocessing code is in C++ and has the following requirements:
 
 - [CLI11][1]
@@ -93,7 +100,7 @@ export PANGOLIN_WINDOW_URI=headless://
 
 ### Pre-processing the Data （New method)
 Run ShapeNetData.ipynb<br>
-If using wsl, install google drive and change source_dir = '/mnt/g/Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2'<br>
+If using wsl, install google drive and change source_dir to '/mnt/g/Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2'<br>
 This method utilizes the package
 
 - [mesh_to_sdf][5]
@@ -166,9 +173,6 @@ python train_deep_sdf.py -e examples/sofas
 
 # pre-process the sofa test set (SDF samples)
 python preprocess_data.py --data_dir data --source [...]/ShapeNetCore.v2/ --name ShapeNetV2 --split examples/splits/sv2_sofas_test.json --test --skip
-
-# pre-process the sofa test set (surface samples)
-python preprocess_data.py --data_dir data --source [...]/ShapeNetCore.v2/ --name ShapeNetV2 --split examples/splits/sv2_sofas_test.json --surface --skip
 
 # reconstruct meshes from the sofa test split (after 2000 epochs)
 python reconstruct.py -e examples/sofas -c 2000 --split examples/splits/sv2_sofas_test.json -d data --skip
