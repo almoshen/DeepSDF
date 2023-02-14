@@ -114,7 +114,7 @@ This method utilizes the package
 Once data has been preprocessed, models can be trained using:
 
 ```
-python train_deep_sdf.py -e <experiment_directory>
+python train_deep_sdf.py -e <experiment_directory> ('examples/sofas')
 ```
 
 Models can also be trained using:
@@ -123,7 +123,8 @@ Models can also be trained using:
 colab_train_deep_sdf.ipynb
 ```
 Check the main_function() and change parameters for different training <br>
-Change datasource in specs.json to google drive data folder like "/mnt/g/Shared drives/Github/DeepSDF/data" for wsl
+Change datasource in specs.json to google drive data folder like "/mnt/g/Shared drives/Github/DeepSDF/data" for wsl <br>
+If you see errors like killed (in Linux) or cuda out of memory (colab), try to increase batch_split
 
 Parameters of training are stored in a "specification file" in the experiment directory, which (1) avoids proliferation of command line arguments and (2) allows for easy reproducibility. This specification file includes a reference to the data directory and a split file specifying which subset of the data to use for training.
 
