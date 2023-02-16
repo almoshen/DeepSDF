@@ -45,6 +45,12 @@ The only file that is required to begin an experiment is 'specs.json', which set
 
 ## How to Use DeepSDF
 
+### Preparation
+Anaconda environment yml file uploaded for your convenience. If you are using wsl, I recommend you to use [Visual Studio Code][8] to run Jupyer notebooks.
+
+[8]: https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-vscode
+
+
 ### Attention!
 
 If you train the model using colab, please upload zip file to colab and unzip there. Reading files from google drives slow down your training process. The A100 is as slow as my 3080ti when I read data from google drives.<br>
@@ -53,52 +59,8 @@ Change the 'datasource' in exmples/categories/xx.json file <br>
 
 Original Data stored in google drive (Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2)
 
-### Pre-processing the Data （Original method)
-Not The Preferred Method<br>
-In order to use mesh data for training a DeepSDF model, the mesh will need to be pre-processed. This can be done with the `preprocess_data.py` executable. The preprocessing code is in C++ and has the following requirements:
 
-- [CLI11][1]
-- [Pangolin][2]
-- [nanoflann][3]
-- [Eigen3][4]
-
-[1]: https://github.com/CLIUtils/CLI11
-[2]: https://github.com/stevenlovegrove/Pangolin
-[3]: https://github.com/jlblancoc/nanoflann
-[4]: https://eigen.tuxfamily.org
-
-Easiest way to use CLI11, Pangolin and nanoflann: clone the repo and use cmake:
-
-```
-mkdir build && cd build
-cmake ..
-cmake --build .
-
-sudo make install
-```
-For Eigen3: sudo apt install libeigen3-dev
-
-With these dependencies, the build process follows the standard CMake procedure:
-
-```
-mkdir build
-cd build
-cmake ..
-make -j
-```
-
-Once this is done there should be two executables in the `DeepSDF/bin` directory, one for surface sampling and one for SDF sampling. With the binaries, the dataset can be preprocessed using `preprocess_data.py`.
-
-
-#### Preprocessing with Headless Rendering (Original method)
-
-The preprocessing script requires an OpenGL context, and to acquire one it will open a (small) window for each shape using Pangolin. If Pangolin has been compiled with EGL support, you can use the "headless" rendering mode to avoid the windows stealing focus. Pangolin's headless mode can be enabled by setting the `PANGOLIN_WINDOW_URI` environment variable as follows:
-
-```
-export PANGOLIN_WINDOW_URI=headless://
-```
-
-### Pre-processing the Data （New method)
+### Pre-processing the Data （Preferred method)
 Run ShapeNetData.ipynb<br>
 If using wsl, install google drive and change source_dir to '/mnt/g/Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2'<br>
 This method utilizes the package
@@ -106,7 +68,6 @@ This method utilizes the package
 - [mesh_to_sdf][5]
 
 [5]: https://github.com/marian42/mesh_to_sdf
-
 
 
 ### Training a Model
@@ -124,7 +85,7 @@ colab_train_deep_sdf.ipynb
 ```
 Check the main_function() and change parameters for different training <br>
 Change datasource in specs.json to google drive data folder like "/mnt/g/Shared drives/Github/DeepSDF/data" for wsl <br>
-If you see errors like killed (in Linux) or cuda out of memory (colab), try to increase batch_split
+If you see errors like killed (in Linux) or cuda out of memory (colab), try to increase batch_split <br>
 
 Parameters of training are stored in a "specification file" in the experiment directory, which (1) avoids proliferation of command line arguments and (2) allows for easy reproducibility. This specification file includes a reference to the data directory and a split file specifying which subset of the data to use for training.
 
@@ -178,6 +139,50 @@ python preprocess_data.py --data_dir data --source [...]/ShapeNetCore.v2/ --name
 # reconstruct meshes from the sofa test split (after 2000 epochs)
 python reconstruct.py -e examples/sofas -c 2000 --split examples/splits/sv2_sofas_test.json -d data --skip
 
+```
+### Pre-processing the Data （Original method)
+Not The Preferred Method<br>
+In order to use mesh data for training a DeepSDF model, the mesh will need to be pre-processed. This can be done with the `preprocess_data.py` executable. The preprocessing code is in C++ and has the following requirements:
+
+- [CLI11][1]
+- [Pangolin][2]
+- [nanoflann][3]
+- [Eigen3][4]
+
+[1]: https://github.com/CLIUtils/CLI11
+[2]: https://github.com/stevenlovegrove/Pangolin
+[3]: https://github.com/jlblancoc/nanoflann
+[4]: https://eigen.tuxfamily.org
+
+Easiest way to use CLI11, Pangolin and nanoflann: clone the repo and use cmake:
+
+```
+mkdir build && cd build
+cmake ..
+cmake --build .
+
+sudo make install
+```
+For Eigen3: sudo apt install libeigen3-dev
+
+With these dependencies, the build process follows the standard CMake procedure:
+
+```
+mkdir build
+cd build
+cmake ..
+make -j
+```
+
+Once this is done there should be two executables in the `DeepSDF/bin` directory, one for surface sampling and one for SDF sampling. With the binaries, the dataset can be preprocessed using `preprocess_data.py`.
+
+
+#### Preprocessing with Headless Rendering (Original method)
+
+The preprocessing script requires an OpenGL context, and to acquire one it will open a (small) window for each shape using Pangolin. If Pangolin has been compiled with EGL support, you can use the "headless" rendering mode to avoid the windows stealing focus. Pangolin's headless mode can be enabled by setting the `PANGOLIN_WINDOW_URI` environment variable as follows:
+
+```
+export PANGOLIN_WINDOW_URI=headless://
 ```
 
 ## License
