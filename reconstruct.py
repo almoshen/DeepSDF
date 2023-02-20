@@ -213,14 +213,13 @@ if __name__ == "__main__":
 
     for ii, folder in enumerate(foldernames):
 
-        if not os.path.isdir(folder):
+        full_filename = os.path.join(data_source, ws.sdf_samples_subdir, folder)
+
+        if not os.path.isdir(full_filename):
             continue
 
-        if not os.listdir(folder):
+        if not os.listdir(full_filename):
             continue
-
-
-        full_filename = os.path.join(args.data_source, ws.sdf_samples_subdir, folder)
 
         logging.debug("loading {}".format(folder))
 
