@@ -46,7 +46,8 @@ The only file that is required to begin an experiment is 'specs.json', which set
 ## How to Use DeepSDF
 
 ### Preparation
-Anaconda environment yml file uploaded for your convenience. If you are using wsl, I recommend you to use [Visual Studio Code][8] to run Jupyer notebooks.
+Anaconda environment yml file uploaded for your convenience. If you are using wsl, I recommend you to use [Visual Studio Code][8] to run Jupyer notebooks.<br>
+To use conda env, run conda env create -f environment.yml.
 
 [8]: https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-vscode
 
