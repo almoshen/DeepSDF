@@ -89,7 +89,7 @@ If you see errors like killed (in Linux) or cuda out of memory (colab), try to i
 
 Parameters of training are stored in a "specification file" in the experiment directory, which (1) avoids proliferation of command line arguments and (2) allows for easy reproducibility. This specification file includes a reference to the data directory and a split file specifying which subset of the data to use for training.
 
-##### Visualizing Progress
+##### Visualizing Training Progress
 
 All intermediate results from training are stored in the experiment directory. To visualize the progress of a model during training, run:
 
@@ -115,6 +115,10 @@ python reconstruct.py -e <experiment_directory>
 Or colab_reconstruct.ipynb
 
 This will use the latest model parameters to reconstruct all the meshes in the split. To specify a particular checkpoint to use for reconstruction, use the ```--checkpoint``` flag followed by the epoch number. Generally, test SDF sampling strategy and regularization could affect the quality of the test reconstructions. For example, sampling aggressively near the surface could provide accurate surface details but might leave under-sampled space unconstrained, and using high L2 regularization coefficient could result in perceptually better but quantitatively worse test reconstructions.
+
+### Visualizing Meshes
+
+Run visualize.ipynb
 
 ## Examples
 
