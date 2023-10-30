@@ -128,12 +128,10 @@ If you see error related to Thread. Add find_package(Threads) to CMakeLists.txt
 
 With these dependencies, the build process follows the standard CMake procedure:
 
-```
 mkdir build
 cd build
 cmake ..
 make -j
-```
 
 Once this is done there should be two executables in the `DeepSDF/bin` directory, one for surface sampling and one for SDF sampling. With the binaries, the dataset can be preprocessed using `preprocess_data.py`.
 
@@ -142,7 +140,6 @@ Once this is done there should be two executables in the `DeepSDF/bin` directory
 
 The preprocessing script requires an OpenGL context, and to acquire one it will open a (small) window for each shape using Pangolin. If Pangolin has been compiled with EGL support, you can use the "headless" rendering mode to avoid the windows stealing focus. Pangolin's headless mode can be enabled by setting the `PANGOLIN_WINDOW_URI` environment variable as follows:
 
-```
 export PANGOLIN_WINDOW_URI=headless://
 ```
 
