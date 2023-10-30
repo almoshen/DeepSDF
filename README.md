@@ -115,7 +115,8 @@ cd ../..
 git clone https://github.com/facebookresearch/DeepSDF.git
 cd DeepSDF
 
-###### Comment out line 97 of src/ShaderProgram.cpp 
+###### Comment out line 97 of src/ShaderProgram.cpp
+line 97: in int gl_PrimitiveID ;
 sed -i "97 s/^/\/\//" src/ShaderProgram.cpp
 
 git submodule update --init
@@ -143,7 +144,7 @@ The preprocessing script requires an OpenGL context, and to acquire one it will 
 export PANGOLIN_WINDOW_URI=headless://
 ```
 
-### Pre-processing the Data （Another method)
+### Pre-processing the Data （Another method/Not Preferred)
 Run ShapeNetData.ipynb<br>
 If using wsl, install google drive and change source_dir to '/mnt/g/Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2'<br>
 This method utilizes the package
