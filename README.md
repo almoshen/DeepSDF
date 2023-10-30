@@ -46,7 +46,7 @@ The only file that is required to begin an experiment is 'specs.json', which set
 ## How to Use DeepSDF
 
 ### Preparation
-Anaconda environment yml file uploaded for your convenience. If you are using wsl, I recommend you to use [Visual Studio Code][8] to run Jupyer notebooks.<br>
+Anaconda environment yml file uploaded for your convenience.<br>
 To use conda env, run conda env create -f environment.yml.
 
 [8]: https://learn.microsoft.com/en-us/windows/wsl/tutorials/wsl-vscode
@@ -55,8 +55,6 @@ To use conda env, run conda env create -f environment.yml.
 ### Attention!
 
 If you train the model using colab, please use gdown to download your data from google drive. Reading files directly from google drives slow down your training process.<br>
-Every python script has a corresponding Jupyternotebook.<br>
-Change the 'datasource' in exmples/categories/xx.json file <br>
 
 Original Data stored in google drive (Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2)
 
