@@ -60,8 +60,9 @@ Change the 'datasource' in exmples/categories/xx.json file <br>
 
 Original Data stored in google drive (Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2)
 
-```
 ### Pre-processing the Data （Original method / Preferred)
+
+```
 In order to use mesh data for training a DeepSDF model, the mesh will need to be pre-processed. This can be done with the `preprocess_data.py` executable. The preprocessing code is in C++ and has the following requirements:
 
 - [CLI11][1]
@@ -144,7 +145,7 @@ The preprocessing script requires an OpenGL context, and to acquire one it will 
 export PANGOLIN_WINDOW_URI=headless://
 ```
 
-### Pre-processing the Data （Another method/Not Preferred)
+### Pre-processing the Data （Not Preferred)
 Run ShapeNetData.ipynb<br>
 If using wsl, install google drive and change source_dir to '/mnt/g/Shared drives/Dataset_ShapeNetCore/data/ShapeNetCore.v2'<br>
 This method utilizes the package
