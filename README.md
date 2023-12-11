@@ -1,6 +1,6 @@
 # DeepSDF
 
-This is an implementation of the CVPR '19 paper "DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation" by Park et al. See the paper [here][7]. 
+This is an implementation of the CVPR '19 paper "DeepSDF: Learning Continuous Signed Distance Functions for Shape Representation" by Park et al.
 
 ## File Organization
 
@@ -63,15 +63,10 @@ Original Data stored in google drive (Shared drives/Dataset_ShapeNetCore/data/Sh
 ```
 In order to use mesh data for training a DeepSDF model, the mesh will need to be pre-processed. This can be done with the `preprocess_data.py` executable. The preprocessing code is in C++ and has the following requirements:
 
-- [CLI11][1]
-- [Pangolin][2]
-- [nanoflann][3]
-- [Eigen3][4]
-
-[1]: https://github.com/CLIUtils/CLI11
-[2]: https://github.com/stevenlovegrove/Pangolin
-[3]: https://github.com/jlblancoc/nanoflann
-[4]: https://eigen.tuxfamily.org
+- [CLI11]
+- [Pangolin]
+- [nanoflann]
+- [Eigen3]
 
 Preprocess build steps:
 
@@ -223,13 +218,17 @@ python train_deep_sdf.py -e examples/sofas
 # pre-process the sofa test set (SDF samples)
 python preprocess_data.py --data_dir data --source [...]/ShapeNetCore.v2/ --name ShapeNetV2 --split examples/splits/sv2_sofas_test.json --test --skip
 
+# pre-process the sofa test set (surface samples)
+python preprocess_data.py --data_dir data --source [...]/ShapeNetCore.v2/ --name ShapeNetV2 --split examples/splits/sv2_sofas_test.json --surface --skip
+
 # reconstruct meshes from the sofa test split (after 2000 epochs)
 python reconstruct.py -e examples/sofas -c 2000 --split examples/splits/sv2_sofas_test.json -d data --skip
+
+# evaluate the reconstructions
+python evaluate.py -e examples/sofas -c 2000 -d data -s examples/splits/sv2_sofas_test.json 
 
 
 ## License
 
-DeepSDF is relased under the MIT License. See the [LICENSE file][6] for more details.
+DeepSDF is relased under the MIT License.
 
-[6]: https://github.com/facebookresearch/DeepSDF/blob/master/LICENSE
-[7]: http://openaccess.thecvf.com/content_CVPR_2019/html/Park_DeepSDF_Learning_Continuous_Signed_Distance_Functions_for_Shape_Representation_CVPR_2019_paper.html
