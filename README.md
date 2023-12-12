@@ -135,6 +135,7 @@ Once this is done there should be two executables in the `DeepSDF/bin` directory
 
 The preprocessing script requires an OpenGL context, and to acquire one it will open a (small) window for each shape using Pangolin. If Pangolin has been compiled with EGL support, you can use the "headless" rendering mode to avoid the windows stealing focus. Pangolin's headless mode can be enabled by setting the `PANGOLIN_WINDOW_URI` environment variable as follows:
 
+export MESA_GL_VERSION_OVERRIDE=3.3 (required)
 export PANGOLIN_WINDOW_URI=headless://
 ```
 
